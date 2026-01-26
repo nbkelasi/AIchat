@@ -1,20 +1,45 @@
-import { app, BrowserWindow } from 'electron';
-import path from 'path';
+import { app, BrowserWindow, protocol, net } from 'electron'
+import path from 'path'
+import fs from 'fs/promises'
+import url from 'url'
+import 'dotenv/config'
+import { configManager } from './config'
+import { createMenu, updateMenu } from './menu'
+import { setupIPC } from './ipc'
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-const createWindow = () => {
+const createWindow = async () => {
+  // 初始化配置
+  await configManager.load()
+
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1024,
+    height: 768,
+    title: 'VChat',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  // Create application menu
+  createMenu(mainWindow)
+
+  // Setup IPC handlers
+  setupIPC(mainWindow)
+
+  protocol.handle('safe-file', async (request) => {
+    console.log(request.url)
+    const filePath = decodeURIComponent(request.url.slice('safe-file://'.length))
+    console.log(filePath)
+    const newFilePath = url.pathToFileURL(filePath).toString()
+    console.log(newFilePath)
+    return net.fetch(newFilePath)
+  })
 
   // and load the index.html of the app.
   if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
@@ -24,8 +49,10 @@ const createWindow = () => {
   }
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
-};
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools();
+  }
+}
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
