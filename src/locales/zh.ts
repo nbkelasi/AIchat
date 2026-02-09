@@ -1,11 +1,23 @@
 export default {
+  app: {
+    name: 'AIChat'
+  },
   settings: {
     title: '设置',
     language: '语言',
     fontSize: '字体大小',
     selectLanguage: '选择语言...',
     general: '通用',
-    models: '模型'
+    models: '模型',
+    appearance: '外观',
+    themeMode: '主题模式',
+    accentColor: '主题颜色',
+    languageSection: '语言'
+  },
+  theme: {
+    light: '浅色',
+    dark: '深色',
+    system: '跟随系统'
   },
   contextMenu: {
     deleteConversation: '删除对话'
@@ -16,7 +28,18 @@ export default {
     english: 'English',
     newChat: '新建聊天',
     settings: '应用设置',
-    typeMessage: '输入消息...'
+    typeMessage: '输入消息...',
+    messageImage: '消息图片'
+  },
+  home: {
+    greeting: '今天我能帮您什么？',
+    selectModelHint: '选择一个模型开始聊天'
+  },
+  conversation: {
+    stopGenerating: '停止生成',
+    regenerate: '重新生成',
+    aiDisclaimer: 'AI 可能会出错，请核实重要信息。',
+    selectToStart: '选择一个对话开始聊天'
   },
   menu: {
     app: {

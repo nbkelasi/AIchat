@@ -1,13 +1,13 @@
 <template>
-  <div class="flex flex-col h-full bg-background" v-if="convsersation">
+  <div class="flex flex-col h-full bg-background" v-if="conversation">
     <!-- Header -->
     <div class="h-14 lg:h-[60px] flex items-center justify-between px-6 border-b bg-background/95 backdrop-blur z-10 flex-shrink-0">
       <div class="flex flex-col">
-        <h3 class="font-semibold text-foreground text-sm lg:text-base">{{ convsersation.title }}</h3>
-        <span class="text-xs text-muted-foreground">{{ dayjs(convsersation.updatedAt).format('YYYY-MM-DD HH:mm') }}</span>
+        <h3 class="font-semibold text-foreground text-sm lg:text-base">{{ conversation.title }}</h3>
+        <span class="text-xs text-muted-foreground">{{ dayjs(conversation.updatedAt).format('YYYY-MM-DD HH:mm') }}</span>
       </div>
       <div class="text-xs text-muted-foreground bg-secondary px-2 py-1 rounded-md">
-        {{ convsersation.selectedModel }}
+        {{ conversation.selectedModel }}
       </div>
     </div>
 
@@ -31,7 +31,7 @@
             class="shadow-md rounded-full px-4"
           >
             <Icon icon="mdi:stop-circle-outline" class="mr-1" />
-            <span>Stop Generating</span>
+            <span>{{ t('conversation.stopGenerating') }}</span>
           </Button>
           <Button 
             v-else-if="lastQuestion && filteredMessages[filteredMessages.length - 1]?.type === 'answer'"
@@ -41,20 +41,20 @@
             class="shadow-md rounded-full px-4 bg-background border border-border hover:bg-accent"
           >
             <Icon icon="mdi:refresh" class="mr-1" />
-            <span>Regenerate</span>
+            <span>{{ t('conversation.regenerate') }}</span>
           </Button>
         </div>
 
         <MessageInput  @create="sendNewMessage" v-model="inputValue" :disabled="messageStore.isMessageLoading"/>
         
         <div class="text-center text-[10px] text-muted-foreground mt-2 opacity-50">
-           AI can make mistakes. Please check important information.
+           {{ t('conversation.aiDisclaimer') }}
         </div>
       </div>
     </div>
   </div>
   <div v-else class="flex h-full items-center justify-center text-muted-foreground">
-     Select a conversation to start
+     {{ t('conversation.selectToStart') }}
   </div>
 </template>
 
@@ -62,6 +62,7 @@
 import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useRoute } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import MessageInput from '../components/MessageInput.vue'
 import MessageList from '../components/MessageList.vue'
@@ -71,6 +72,7 @@ import { useMessageStore } from '../stores/message'
 import { useProviderStore } from '../stores/provider'
 import { MessageProps, MessageListInstance, MessageStatus } from '../types'
 
+const { t } = useI18n()
 const inputValue = ref('')
 let currentMessageListHeight = 0
 const messageListRef = ref<MessageListInstance>()
@@ -91,7 +93,7 @@ const sendedMessages = computed(() => filteredMessages.value
 )
 let conversationId = ref(parseInt(route.params.id as string))
 const initMessageId = parseInt(route.query.init as string)
-const convsersation = computed(() => conversationStore.getConversationById(conversationId.value))
+const conversation = computed(() => conversationStore.getConversationById(conversationId.value))
 const lastQuestion = computed(() => messageStore.getLastQuestion(conversationId.value))
 
 const sendNewMessage = async (question: string, imagePath?: string) => {
@@ -135,14 +137,14 @@ const creatingInitialMessage = async () => {
   }
   const newMessageId = await messageStore.createMessage(createdData)
   await messageScrollToBottom()
-  if (convsersation.value) {
-    const provider = provdierStore.getProviderById(convsersation.value.providerId)
+  if (conversation.value) {
+    const provider = provdierStore.getProviderById(conversation.value.providerId)
     if (provider) {
       console.log('provider', provider)
       await window.electronAPI.startChat({
         messageId: newMessageId,
         providerName: provider.name,
-        selectedModel: convsersation.value.selectedModel,
+        selectedModel: conversation.value.selectedModel,
         messages: sendedMessages.value
       })
     }

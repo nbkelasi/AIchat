@@ -28,7 +28,7 @@
           <img 
             v-if="message.imagePath" 
             :src="`safe-file://${message.imagePath}`" 
-            alt="Message image" 
+            :alt="t('common.messageImage')" 
             class="mb-2 max-w-full h-auto rounded-md object-cover"
             style="max-height: 200px;"
           >
@@ -55,11 +55,13 @@
   
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import dayjs from 'dayjs'
 import VueMarkdown from 'vue-markdown-render'
 import markdownItHighlightjs from 'markdown-it-highlightjs'
 import { MessageProps } from '../types'
 
+const { t } = useI18n()
 defineProps<{ messages: MessageProps[] }>()
 const plugins = [ markdownItHighlightjs ]
 const _ref = ref<HTMLDivElement>()

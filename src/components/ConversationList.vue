@@ -23,7 +23,7 @@
         <div class="flex items-center">
           <div class="flex items-center gap-2 overflow-hidden">
             <div class="font-semibold line-clamp-1 break-all">
-              {{ item.title || 'New Chat' }}
+              {{ item.title || t('common.newChat') }}
             </div>
           </div>
           <div :class="cn(
@@ -44,9 +44,12 @@
   
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { watch, onMounted } from 'vue'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
-import { onMounted } from 'vue'
+import 'dayjs/locale/zh-cn'
+import 'dayjs/locale/en'
 import { ConversationProps } from '../types'
 import { useConversationStore } from '../stores/conversation'
 import { cn } from '../lib/utils'
@@ -61,6 +64,12 @@ interface Props {
 defineProps<Props>()
 const router = useRouter()
 const store = useConversationStore()
+const { t, locale } = useI18n()
+
+// 监听语言变化，更新 dayjs 语言
+watch(locale, (newLocale) => {
+  dayjs.locale(newLocale === 'zh' ? 'zh-cn' : 'en')
+}, { immediate: true })
 
 const showContextMenu = (id: number) => {
   window.electronAPI.showContextMenu(id)

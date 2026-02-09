@@ -24,7 +24,7 @@
              class="font-semibold text-lg transition-opacity duration-300"
              :class="{'opacity-0 w-0': isCollapsed, 'opacity-100': !isCollapsed}"
            >
-             AIChat
+             {{ t('app.name') }}
            </span>
         </div>
       </div>

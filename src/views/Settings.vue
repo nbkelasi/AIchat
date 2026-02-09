@@ -24,30 +24,30 @@
         <section class="space-y-4">
           <h2 class="text-lg font-semibold flex items-center gap-2">
             <Icon icon="radix-icons:desktop" class="w-5 h-5" />
-            Appearance
+            {{ t('settings.appearance') }}
           </h2>
           <div class="grid gap-6 p-4 border rounded-lg bg-card">
             
             <!-- Theme Mode -->
             <div class="flex items-center justify-between">
-              <label class="text-sm font-medium">Theme Mode</label>
+              <label class="text-sm font-medium">{{ t('settings.themeMode') }}</label>
               <div class="flex items-center gap-2 bg-muted p-1 rounded-lg">
                 <button 
-                  v-for="m in ['light', 'system', 'dark'] as const" 
-                  :key="m"
-                  @click="themeStore.setMode(m)"
+                  v-for="m in themeOptions" 
+                  :key="m.value"
+                  @click="themeStore.setMode(m.value)"
                   class="px-3 py-1.5 text-xs font-medium rounded-md transition-all flex items-center gap-2"
-                  :class="themeStore.mode === m ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'"
+                  :class="themeStore.mode === m.value ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'"
                 >
-                  <Icon :icon="m === 'light' ? 'radix-icons:sun' : m === 'dark' ? 'radix-icons:moon' : 'radix-icons:laptop'" />
-                  <span class="capitalize">{{ m }}</span>
+                  <Icon :icon="m.icon" />
+                  <span>{{ t(m.labelKey) }}</span>
                 </button>
               </div>
             </div>
 
             <!-- Accent Color -->
             <div class="flex items-center justify-between">
-              <label class="text-sm font-medium">Accent Color</label>
+              <label class="text-sm font-medium">{{ t('settings.accentColor') }}</label>
               <div class="flex gap-2">
                 <button 
                   v-for="c in ['blue', 'green', 'orange', 'violet', 'rose'] as const" 
@@ -89,7 +89,7 @@
         <section class="space-y-4">
            <h2 class="text-lg font-semibold flex items-center gap-2">
             <Icon icon="radix-icons:globe" class="w-5 h-5" />
-            Language
+            {{ t('settings.languageSection') }}
           </h2>
           <div class="p-4 border rounded-lg bg-card flex items-center justify-between">
             <label class="text-sm font-medium">{{ t('settings.language') }}</label>
@@ -203,6 +203,13 @@ const activeTab = ref('general')
 const providerStore = useProviderStore()
 const themeStore = useThemeStore()
 const providers = computed(() => providerStore.items)
+
+// 主题选项配置
+const themeOptions = [
+  { value: 'light' as const, icon: 'radix-icons:sun', labelKey: 'theme.light' },
+  { value: 'system' as const, icon: 'radix-icons:laptop', labelKey: 'theme.system' },
+  { value: 'dark' as const, icon: 'radix-icons:moon', labelKey: 'theme.dark' }
+]
 
 const currentConfig = reactive<AppConfig>({
   language: 'zh',

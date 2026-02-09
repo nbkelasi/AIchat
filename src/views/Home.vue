@@ -8,8 +8,8 @@
         <div class="h-16 w-16 bg-primary/10 text-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
            <Icon icon="lucide:bot" class="w-10 h-10" />
         </div>
-        <h1 class="text-3xl font-bold text-foreground tracking-tight">How can I help you today?</h1>
-        <p class="text-muted-foreground">Select a model and start chatting</p>
+        <h1 class="text-3xl font-bold text-foreground tracking-tight">{{ t('home.greeting') }}</h1>
+        <p class="text-muted-foreground">{{ t('home.selectModelHint') }}</p>
       </div>
 
       <div class="w-full space-y-4">
@@ -28,12 +28,14 @@
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { Icon } from '@iconify/vue'
+import { useI18n } from 'vue-i18n'
 import { db } from '../db'
 import { useConversationStore } from '../stores/conversation'
 import { useProviderStore } from '../stores/provider'
 import ProviderSelect from '../components/ProviderSelect.vue'
 import MessageInput from '../components/MessageInput.vue'
 
+const { t } = useI18n()
 const currentProvider = ref('')
 const router = useRouter()
 const conversationStore = useConversationStore()
