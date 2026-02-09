@@ -1,7 +1,7 @@
 import { app, Menu, BrowserWindow, MenuItemConstructorOptions } from 'electron'
 import { configManager } from './config'
-import en from './locales/en'
-import zh from './locales/zh'
+import en from './locales/en.json'
+import zh from './locales/zh.json'
 
 type MessageSchema = typeof zh
 const messages: Record<string, MessageSchema> = {
