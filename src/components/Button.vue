@@ -42,7 +42,7 @@ const props = withDefaults(defineProps<ButtonProps>(), {
   size: 'default'
 })
 
-// Expose className from props for cn
+// 从 props 中暴露 className 供 cn 使用
 const className = computed(() => props.class)
 
 const iconWithLoading = computed(() => {

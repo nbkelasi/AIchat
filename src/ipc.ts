@@ -8,14 +8,14 @@ import path from 'path'
 import url from 'url'
 
 export function setupIPC(mainWindow: BrowserWindow) {
-  // Context menu handler
+  // 右键菜单处理
   ipcMain.on('show-context-menu', (event, id) => {
     const win = BrowserWindow.fromWebContents(event.sender)
     if (!win) return
     createContextMenu(win, id)
   })
 
-  // Chat handler
+  // 聊天处理
   let currentAbortController: AbortController | null = null
   ipcMain.on('stop-chat', () => {
     if (currentAbortController) {
@@ -32,7 +32,7 @@ export function setupIPC(mainWindow: BrowserWindow) {
       const provider = createProvider(providerName)
       const stream = await provider.chat(messages, selectedModel, currentAbortController.signal)
       for await (const chunk of stream) {
-        if (currentAbortController === null) break // Double check if aborted
+        if (currentAbortController === null) break // 二次检查是否已中止
         console.log('the chunk', chunk)
         const content = {
           messageId,
@@ -42,10 +42,10 @@ export function setupIPC(mainWindow: BrowserWindow) {
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        console.log('Chat aborted')
+        console.log('聊天已中止')
         return
       }
-      console.error('Chat error:', error)
+      console.error('聊天错误:', error)
       const errorContent = {
         messageId,
         data: {
@@ -60,7 +60,7 @@ export function setupIPC(mainWindow: BrowserWindow) {
     }
   })
 
-  // Config handlers
+  // 配置处理
   ipcMain.handle('get-config', () => {
     return configManager.get()
   })
@@ -74,7 +74,7 @@ export function setupIPC(mainWindow: BrowserWindow) {
     return updatedConfig
   })
 
-  // File handling
+  // 文件处理
   ipcMain.handle('copy-image-to-user-dir', async (event, sourcePath: string) => {
     const userDataPath = app.getPath('userData')
     const imagesDir = path.join(userDataPath, 'images')

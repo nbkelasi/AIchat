@@ -20,7 +20,7 @@
 
       <TabsContent value="general" class="space-y-8 max-w-[600px]">
         
-        <!-- Appearance Section -->
+        <!-- 外观设置 -->
         <section class="space-y-4">
           <h2 class="text-lg font-semibold flex items-center gap-2">
             <Icon icon="radix-icons:desktop" class="w-5 h-5" />
@@ -28,7 +28,7 @@
           </h2>
           <div class="grid gap-6 p-4 border rounded-lg bg-card">
             
-            <!-- Theme Mode -->
+            <!-- 主题模式 -->
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">{{ t('settings.themeMode') }}</label>
               <div class="flex items-center gap-2 bg-muted p-1 rounded-lg">
@@ -45,7 +45,7 @@
               </div>
             </div>
 
-            <!-- Accent Color -->
+            <!-- 主题颜色 -->
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">{{ t('settings.accentColor') }}</label>
               <div class="flex gap-2">
@@ -55,7 +55,7 @@
                   @click="themeStore.setColor(c)"
                   class="w-6 h-6 rounded-full border-2 ring-offset-background transition-all"
                   :class="[
-                    `bg-${c}-500`, // We need to ensure these classes exist or use inline styles for the button color preview
+                    `bg-${c}-500`, // 需要确保这些类存在，或使用内联样式来预览按钮颜色
                     themeStore.color === c ? 'ring-2 ring-ring ring-offset-2 border-background' : 'border-transparent hover:scale-110'
                   ]"
                   :style="{ backgroundColor: getColorValue(c) }"
@@ -64,7 +64,7 @@
               </div>
             </div>
 
-            <!-- Font Size -->
+            <!-- 字体大小 -->
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">{{ t('settings.fontSize') }}</label>
               <NumberFieldRoot v-model="currentConfig.fontSize" class="inline-flex items-center">
@@ -85,7 +85,7 @@
           </div>
         </section>
 
-        <!-- Language Section -->
+        <!-- 语言设置 -->
         <section class="space-y-4">
            <h2 class="text-lg font-semibold flex items-center gap-2">
             <Icon icon="radix-icons:globe" class="w-5 h-5" />
@@ -217,7 +217,7 @@ const currentConfig = reactive<AppConfig>({
   providerConfigs: {}
 })
 
-// Helper for color preview
+// 颜色预览辅助函数
 const getColorValue = (color: string) => {
   const colors: Record<string, string> = {
     blue: '#3b82f6',

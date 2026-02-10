@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-full items-center justify-center p-8 bg-background relative overflow-hidden">
-    <!-- Background Decor -->
+    <!-- 背景装饰 -->
     <div class="absolute inset-0 bg-gradient-to-b from-primary/5 to-background pointer-events-none" />
 
     <div class="z-10 w-full max-w-2xl flex flex-col items-center gap-8">

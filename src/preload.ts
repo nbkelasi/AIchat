@@ -1,4 +1,4 @@
-// See the Electron documentation for details on how to use preload scripts:
+// 关于如何使用预加载脚本，请参阅 Electron 文档：
 // https://www.electronjs.org/docs/latest/tutorial/process-model#preload-scripts
 import { ipcRenderer, contextBridge } from 'electron'
 import { CreateChatProps, OnUpdatedCallback, AppConfig } from './types'

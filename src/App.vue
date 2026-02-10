@@ -1,11 +1,11 @@
 <template>
   <div class="flex h-screen w-full bg-background text-foreground overflow-hidden">
-    <!-- Sidebar -->
+    <!-- 侧边栏 -->
     <aside 
       class="flex h-full flex-col border-r bg-muted/30 transition-all duration-300 ease-in-out relative group"
       :class="[isCollapsed ? 'w-[70px]' : 'w-[280px]']"
     >
-      <!-- Toggle Button -->
+      <!-- 展开/折叠按钮 -->
       <button 
         @click="toggleSidebar"
         class="absolute -right-3 top-6 z-50 flex h-6 w-6 items-center justify-center rounded-full border bg-background shadow-md hover:bg-accent hover:text-accent-foreground transition-transform duration-200"
@@ -14,7 +14,7 @@
         <Icon icon="radix-icons:chevron-left" class="h-4 w-4" />
       </button>
 
-      <!-- Sidebar Header -->
+      <!-- 侧边栏头部 -->
       <div class="flex h-14 items-center border-b px-4 lg:h-[60px] flex-shrink-0 overflow-hidden whitespace-nowrap">
         <div class="flex items-center gap-2">
            <div class="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center flex-shrink-0">
@@ -29,12 +29,12 @@
         </div>
       </div>
 
-      <!-- Conversation List -->
+      <!-- 对话列表 -->
       <div class="flex-1 overflow-y-auto overflow-x-hidden p-2">
         <ConversationList :items="items" :collapsed="isCollapsed"/>
       </div>
 
-      <!-- Sidebar Footer -->
+      <!-- 侧边栏底部 -->
       <div class="mt-auto p-4 border-t bg-background/50 backdrop-blur-sm flex flex-col gap-2">
         <div class="grid gap-2" :class="isCollapsed ? 'grid-cols-1' : 'grid-cols-2'">
           <RouterLink to="/" class="w-full">
@@ -53,7 +53,7 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- 主内容区 -->
     <main class="flex-1 flex flex-col h-full relative overflow-hidden">
       <RouterView />
     </main>

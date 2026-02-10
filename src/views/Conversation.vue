@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col h-full bg-background" v-if="conversation">
-    <!-- Header -->
+    <!-- 顶部标题栏 -->
     <div class="h-14 lg:h-[60px] flex items-center justify-between px-6 border-b bg-background/95 backdrop-blur z-10 flex-shrink-0">
       <div class="flex flex-col">
         <h3 class="font-semibold text-foreground text-sm lg:text-base">{{ conversation.title }}</h3>
@@ -11,17 +11,17 @@
       </div>
     </div>
 
-    <!-- Messages Area -->
+    <!-- 消息区域 -->
     <div class="flex-1 overflow-y-auto p-4 md:p-6 scroll-smooth">
       <div class="max-w-3xl mx-auto pb-4">
         <MessageList :messages="filteredMessages" ref="messageListRef"/>
       </div>
     </div>
 
-    <!-- Input Area -->
+    <!-- 输入区域 -->
     <div class="p-4 bg-background/95 backdrop-blur border-t flex-shrink-0 relative">
       <div class="max-w-3xl mx-auto relative">
-        <!-- Floating Actions -->
+        <!-- 浮动操作按钮 -->
         <div class="absolute -top-12 left-1/2 transform -translate-x-1/2 flex gap-2">
           <Button 
             v-if="messageStore.isMessageLoading"
@@ -153,7 +153,7 @@ const creatingInitialMessage = async () => {
 
 const stopGenerating = async () => {
   window.electronAPI.stopChat()
-  // Manually mark the loading message as finished/stopped
+  // 手动将加载中的消息标记为已完成/已停止
   const loadingMsg = messageStore.items.find(item => item.status === 'loading' || item.status === 'streaming')
   if (loadingMsg) {
     await messageStore.updateMessage(loadingMsg.id, { status: 'finished' })
@@ -211,8 +211,8 @@ onMounted(async () => {
       status: getMessageStatus(data),
       updatedAt: new Date().toISOString()
     }
-    // update database
-    // update filteredMessages
+    // 更新数据库
+    // 更新已过滤的消息列表
     await messageStore.updateMessage(messageId, updatedData)
     await nextTick()
     await checkAndScrollToBottom()

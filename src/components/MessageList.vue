@@ -7,7 +7,7 @@
       :class="{'items-end': message.type === 'question', 'items-start': message.type !== 'question'}"
     >
       <div class="max-w-[85%]">
-        <!-- Time -->
+        <!-- 时间 -->
         <div 
           class="text-xs text-muted-foreground mb-1" 
           :class="{'text-right': message.type === 'question'}"
@@ -15,7 +15,7 @@
           {{ dayjs(message.createdAt).format('HH:mm') }}
         </div>
 
-        <!-- Content -->
+        <!-- 内容 -->
         <div 
           class="p-3 rounded-lg shadow-sm"
           :class="{
@@ -24,7 +24,7 @@
             'bg-destructive/10 text-destructive': message.status === 'error'
           }"
         >
-          <!-- Image -->
+          <!-- 图片 -->
           <img 
             v-if="message.imagePath" 
             :src="`safe-file://${message.imagePath}`" 
@@ -33,7 +33,7 @@
             style="max-height: 200px;"
           >
 
-          <!-- Text/Markdown -->
+          <!-- 文本/Markdown -->
           <template v-if="message.status === 'loading'">
              <div class="flex items-center gap-1">
                 <span class="w-1.5 h-1.5 bg-current rounded-full animate-bounce"></span>

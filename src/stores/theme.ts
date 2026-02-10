@@ -23,7 +23,7 @@ export const useThemeStore = defineStore('theme', () => {
   function applyTheme() {
     const root = window.document.documentElement
     
-    // Handle Mode
+    // 处理主题模式
     root.classList.remove('light', 'dark')
     if (mode.value === 'system') {
       const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
@@ -32,18 +32,18 @@ export const useThemeStore = defineStore('theme', () => {
       root.classList.add(mode.value)
     }
 
-    // Handle Color
+    // 处理主题颜色
     root.setAttribute('data-theme', color.value)
   }
 
-  // Listen to system changes
+  // 监听系统主题变化
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
     if (mode.value === 'system') {
       applyTheme()
     }
   })
 
-  // Apply on init
+  // 初始化时应用主题
   watch([mode, color], applyTheme, { immediate: true })
 
   return {
@@ -51,7 +51,7 @@ export const useThemeStore = defineStore('theme', () => {
     color,
     setMode,
     setColor,
-    // Compat for existing code that might use 'theme'
+    // 兼容可能使用 'theme' 的旧代码
     theme: mode,
     setTheme: setMode 
   }

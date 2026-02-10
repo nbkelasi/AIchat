@@ -13,12 +13,12 @@
       @contextmenu.prevent="showContextMenu(item.id)"
       :title="collapsed ? item.title : ''"
     >
-      <!-- Collapsed State -->
+      <!-- 折叠状态 -->
       <div v-if="collapsed" class="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-semibold text-xs flex-shrink-0">
          {{ getInitials(item.title) }}
       </div>
 
-      <!-- Expanded State -->
+      <!-- 展开状态 -->
       <div v-else class="flex w-full flex-col gap-1">
         <div class="flex items-center">
           <div class="flex items-center gap-2 overflow-hidden">
@@ -77,11 +77,11 @@ const showContextMenu = (id: number) => {
 
 const getInitials = (title: string): string => {
   if (!title) return '?'
-  // If Chinese, take first char
+  // 如果是中文，取第一个字符
   if (/[\u4e00-\u9fa5]/.test(title)) {
     return title.charAt(0)
   }
-  // If English, take up to 2 chars
+  // 如果是英文，取前两个字符
   const words = title.trim().split(/\s+/)
   if (words.length >= 2) {
     return (words[0].charAt(0) + words[1].charAt(0)).toUpperCase()
