@@ -14,7 +14,9 @@ dotenv.config();
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name:'AIchat',
+    name: 'AIchat',
+    // 统一可执行文件名称，避免 Linux 因大小写不一致找不到二进制文件
+    executableName: 'aichat',
     icon: './assets/icon',
     asar: true,
   },
@@ -25,9 +27,6 @@ const config: ForgeConfig = {
       name: 'AIchat',
       authors: 'Zhang Xin',
       description: 'A chat application',
-      // 安装程序配置
-      setupIcon: './assets/icon.ico',  // Windows 安装图标
-      iconUrl: 'https://raw.githubusercontent.com/your-repo/vchat/main/assets/icon.ico', // 远程图标URL
       // 快捷方式设置
       setupExe: 'AIchat-Setup.exe',  // 安装程序名称
     }),
@@ -45,7 +44,7 @@ const config: ForgeConfig = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'ZhangXin',
+          owner: 'nbkelasi',
           name: 'AIchat'
         },
         prerelease: false,
