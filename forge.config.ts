@@ -15,8 +15,9 @@ dotenv.config();
 const config: ForgeConfig = {
   packagerConfig: {
     name: 'AIchat',
-    // 统一可执行文件名称，避免 Linux 因大小写不一致找不到二进制文件
-    executableName: 'aichat',
+    // executableName 必须与 package.json 中的 productName 完全一致
+    // 否则 MakerDeb 会找不到对应的二进制文件
+    executableName: 'AIChat',
     icon: './assets/icon',
     asar: true,
   },
