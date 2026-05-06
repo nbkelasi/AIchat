@@ -4,7 +4,7 @@ import type { ConfigEnv, Plugin, UserConfig } from 'vite';
 import pkg from './package.json';
 
 export const builtins = ['electron', ...builtinModules.map((m) => [m, `node:${m}`]).flat()];
-
+// 排除Node.js内置模块和Electron模块，防止被Vite错误打包
 export const external = [...builtins, ...Object.keys('dependencies' in pkg ? (pkg.dependencies as Record<string, unknown>) : {})];
 
 export function getBuildConfig(env: ConfigEnv<'build'>): UserConfig {
@@ -14,10 +14,10 @@ export function getBuildConfig(env: ConfigEnv<'build'>): UserConfig {
     root,
     mode,
     build: {
-      // Prevent multiple builds from interfering with each other.
+      // 避免多进程构建时相互清理输出目录导致文件丢失
       emptyOutDir: false,
-      // 🚧 Multiple builds may conflict.
       outDir: '.vite/build',
+      // 开发环境下开启文件监听
       watch: command === 'serve' ? {} : null,
       minify: command === 'build',
     },

@@ -1,0 +1,94 @@
+name: 构建并发布 AIchat
+
+# 触发条件：推送以 v 开头的 tag（例如 v1.0.0）
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  # =============================
+  # macOS 构建任务（生成 .dmg）
+  # =============================
+  build-macos:
+    name: 构建 macOS
+    runs-on: macos-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 构建并发布（macOS）
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish -- --platform=darwin
+
+  # =============================
+  # Windows 构建任务（生成 .exe）
+  # =============================
+  build-windows:
+    name: 构建 Windows
+    runs-on: windows-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 构建并发布（Windows）
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish -- --platform=win32
+
+  # =============================
+  # Linux 构建任务（生成 .deb / .rpm）
+  # =============================
+  build-linux:
+    name: 构建 Linux
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 安装 Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # Linux 构建 .deb/.rpm 所需的系统依赖
+      - name: 安装 Linux 系统依赖
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            rpm \
+            libgtk-3-dev \
+            libnotify-dev \
+            libnss3-dev \
+            libxss1 \
+            libxtst6 \
+            xauth \
+            xvfb
+
+      - name: 安装依赖
+        run: npm ci
+
+      - name: 构建并发布（Linux）
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npm run publish -- --platform=linux

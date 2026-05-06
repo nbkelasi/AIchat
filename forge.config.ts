@@ -14,7 +14,7 @@ dotenv.config();
 
 const config: ForgeConfig = {
   packagerConfig: {
-    name:'VChat',
+    name:'AIchat',
     icon: './assets/icon',
     asar: true,
   },
@@ -22,14 +22,14 @@ const config: ForgeConfig = {
   makers: [
     new MakerSquirrel({
       // 应用信息
-      name: 'VChat',
-      authors: 'Viking Zhang',
+      name: 'AIchat',
+      authors: 'Zhang Xin',
       description: 'A chat application',
       // 安装程序配置
       setupIcon: './assets/icon.ico',  // Windows 安装图标
       iconUrl: 'https://raw.githubusercontent.com/your-repo/vchat/main/assets/icon.ico', // 远程图标URL
       // 快捷方式设置
-      setupExe: 'VChat-Setup.exe',  // 安装程序名称
+      setupExe: 'AIchat-Setup.exe',  // 安装程序名称
     }),
     new MakerRpm({}), 
     new MakerDeb({}),
@@ -45,8 +45,8 @@ const config: ForgeConfig = {
       name: '@electron-forge/publisher-github',
       config: {
         repository: {
-          owner: 'vikingmute',
-          name: 'vchat'
+          owner: 'ZhangXin',
+          name: 'AIchat'
         },
         prerelease: false,
         draft: true,
@@ -80,11 +80,17 @@ const config: ForgeConfig = {
     // at package time, before code signing the application
     new FusesPlugin({
       version: FuseVersion.V1,
+      // 禁用 RunAsNode：防止攻击者通过环境变量将应用作为 Node.js 解释器运行
       [FuseV1Options.RunAsNode]: false,
+      // 启用 Cookie 加密：防止攻击者通过环境变量修改 Node.js 行为
       [FuseV1Options.EnableCookieEncryption]: true,
+      // 禁用 Node.js 选项环境变量：防止攻击者通过环境变量修改 Node.js 行为
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
+      // 禁用 Node.js CLI inspect 参数：防止攻击者通过环境变量修改 Node.js 行为
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
+      // 启用 ASAR 完整性校验：防止 ASAR 压缩包被篡改
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,
+      // 仅加载 ASAR 压缩包：防止磁盘上的代码被非法替换
       [FuseV1Options.OnlyLoadAppFromAsar]: true,
     }),
   ],

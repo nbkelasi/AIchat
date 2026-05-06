@@ -23,6 +23,10 @@ export function createProvider(providerName: string): BaseProvider {
       }
       return new OpenAIProvider(providerConfig.apiKey, providerConfig.baseUrl)
     default:
-      throw new Error(`Unsupported provider: ${providerName}`)
+      throw new Error(`未受支持的提供商: ${providerName}`)
   }
 }
+
+
+
+

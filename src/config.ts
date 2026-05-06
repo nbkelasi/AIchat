@@ -31,4 +31,5 @@ export const configManager = {
   get() {
     return config
   }
-} 
+}
+
