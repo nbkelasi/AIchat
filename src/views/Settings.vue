@@ -67,14 +67,14 @@
             <!-- 字体大小 -->
             <div class="flex items-center justify-between">
               <label class="text-sm font-medium">{{ t('settings.fontSize') }}</label>
-              <NumberFieldRoot v-model="currentConfig.fontSize" class="inline-flex items-center">
+              <NumberFieldRoot v-model="currentConfig.fontSize" :min="14" :max="24" class="inline-flex items-center">
                 <NumberFieldDecrement class="flex h-8 w-8 items-center justify-center border border-r-0 border-input rounded-l-md bg-background hover:bg-accent text-muted-foreground focus:outline-none">
                   <Icon icon="radix-icons:minus" />
                 </NumberFieldDecrement>
                 <NumberFieldInput 
                   class="h-8 w-12 border border-input bg-background text-center text-sm focus:outline-none focus:ring-1 focus:ring-ring z-10"
-                  :min="12"
-                  :max="20"
+                  :min="14"
+                  :max="24"
                 />
                 <NumberFieldIncrement class="flex h-8 w-8 items-center justify-center border border-l-0 border-input rounded-r-md bg-background hover:bg-accent text-muted-foreground focus:outline-none">
                   <Icon icon="radix-icons:plus" />
@@ -171,6 +171,7 @@ import { AppConfig } from '../types'
 import { setI18nLanguage } from '../i18n'
 import { useProviderStore } from '../stores/provider'
 import { useThemeStore } from '../stores/theme'
+import { useConfigStore } from '../stores/config'
 import { providerConfigs, ProviderConfigItem } from '../config/providerConfig'
 import {
   SelectContent,
@@ -236,6 +237,11 @@ onMounted(async () => {
 
 // 监听配置变化并自动保存
 watch(currentConfig, async (newConfig) => {
+  // 实时应用字体大小到根元素
+  if (newConfig.fontSize) {
+    document.documentElement.style.fontSize = `${newConfig.fontSize}px`
+  }
+
   // 创建一个普通对象来传递配置
   const configToSave = {
     language: newConfig.language,

@@ -95,6 +95,13 @@ window.electronAPI.onMenuOpenSettings(() => {
 onMounted(async () => {
   await initI18n()
   await initProviders()
+  
+  // 获取配置并应用字体大小
+  const config = await window.electronAPI.getConfig()
+  if (config && config.fontSize) {
+    document.documentElement.style.fontSize = `${config.fontSize}px`
+  }
+
   // 获取最初需要的数据
   conversationStore.fetchConversations()
   provdierStore.fetchProviders()
