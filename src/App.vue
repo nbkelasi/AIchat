@@ -66,6 +66,7 @@ import { useI18n } from 'vue-i18n'
 import { initI18n } from './i18n'
 import { initProviders } from './db'
 import { useConversationStore } from './stores/conversation'
+import { useMessageStore } from './stores/message'
 import { useProviderStore } from './stores/provider'
 import ConversationList from './components/ConversationList.vue'
 import Button from './components/Button.vue'
@@ -75,6 +76,7 @@ import { Icon } from '@iconify/vue'
 const router = useRouter()
 const { t } = useI18n()
 const conversationStore = useConversationStore()
+const messageStore = useMessageStore()
 const provdierStore = useProviderStore()
 const items = computed(() => conversationStore.items)
 
@@ -103,6 +105,7 @@ onMounted(async () => {
   }
 
   // 获取最初需要的数据
+  messageStore.initListening()
   conversationStore.fetchConversations()
   provdierStore.fetchProviders()
 })

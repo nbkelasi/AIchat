@@ -152,10 +152,10 @@ const creatingInitialMessage = async () => {
 }
 
 const stopGenerating = async () => {
-  window.electronAPI.stopChat()
-  // 手动将加载中的消息标记为已完成/已停止
+  // 找到当前正在加载或流式传输的消息
   const loadingMsg = messageStore.items.find(item => item.status === 'loading' || item.status === 'streaming')
   if (loadingMsg) {
+    window.electronAPI.stopChat(loadingMsg.id)
     await messageStore.updateMessage(loadingMsg.id, { status: 'finished' })
   }
 }
@@ -174,51 +174,27 @@ watch(() => route.params.id, async (newId: string) => {
   await messageScrollToBottom()
   currentMessageListHeight = 0
 })
+
+const unsubs: (() => void)[] = []
+const messageBuffers = new Map<number, string>()
+
 onMounted(async () => {
   await messageStore.fetchMessagesByConversation(conversationId.value)
   await messageScrollToBottom()
   if (initMessageId) {
     await creatingInitialMessage()
   }
-  let streamContent = ''
-  const checkAndScrollToBottom = async () => {
-    if (messageListRef.value) {
-      const newHeight = messageListRef.value.ref.clientHeight
-      console.log('the newHeight', newHeight)
-			console.log('the currentMessageListHeight', currentMessageListHeight)
-      if (newHeight > currentMessageListHeight) {
-        console.log('scroll to bottom')
-        currentMessageListHeight = newHeight
-        await messageScrollToBottom()
-      }
+})
+
+// 监听消息列表变化以触发滚动
+watch(() => messageStore.items, async () => {
+  if (messageListRef.value) {
+    await nextTick()
+    const newHeight = messageListRef.value.ref.clientHeight
+    if (newHeight > currentMessageListHeight) {
+      currentMessageListHeight = newHeight
+      await messageScrollToBottom()
     }
   }
-  window.electronAPI.onUpdateMessage(async (streamData) => {
-    console.log('stream', streamData)
-    const { messageId, data } = streamData
-    streamContent += data.result
-    const getMessageStatus = (data: any): MessageStatus => {
-      if (data.is_error) {
-        return 'error'
-      } else if (data.is_end) {
-        return 'finished' 
-      } else {
-        return 'streaming'
-      }
-    }
-    const updatedData = {
-      content: streamContent,
-      status: getMessageStatus(data),
-      updatedAt: new Date().toISOString()
-    }
-    // 更新数据库
-    // 更新已过滤的消息列表
-    await messageStore.updateMessage(messageId, updatedData)
-    await nextTick()
-    await checkAndScrollToBottom()
-    if(data.is_end) {
-      streamContent = ''
-    }
-  })
-})
+}, { deep: true })
 </script>

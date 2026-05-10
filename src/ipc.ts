@@ -16,24 +16,39 @@ export function setupIPC(mainWindow: BrowserWindow) {
   })
 
   // 聊天处理
-  let currentAbortController: AbortController | null = null
-  ipcMain.on('stop-chat', () => {
-    if (currentAbortController) {
-      currentAbortController.abort()
-      currentAbortController = null
+  const abortControllers = new Map<number, AbortController>()
+
+  ipcMain.on('stop-chat', (event, messageId?: number) => {
+    if (messageId) {
+      const controller = abortControllers.get(messageId)
+      if (controller) {
+        controller.abort()
+        abortControllers.delete(messageId)
+      }
+    } else {
+      // 如果没有传递 ID，中止所有正在进行的对话
+      for (const [id, controller] of abortControllers.entries()) {
+        controller.abort()
+      }
+      abortControllers.clear()
     }
   })
 
   ipcMain.on('start-chat', async (event, data: CreateChatProps) => {
-    console.log('hey', data)
+    console.log('开始对话:', data)
     const { providerName, messages, messageId, selectedModel } = data
-    currentAbortController = new AbortController()
+    
+    const controller = new AbortController()
+    abortControllers.set(messageId, controller)
+
     try {
       const provider = createProvider(providerName)
-      const stream = await provider.chat(messages, selectedModel, currentAbortController.signal)
+      const stream = await provider.chat(messages, selectedModel, controller.signal)
+      
       for await (const chunk of stream) {
-        if (currentAbortController === null) break // 二次检查是否已中止
-        console.log('the chunk', chunk)
+        // 检查是否已被中止
+        if (!abortControllers.has(messageId)) break
+        
         const content = {
           messageId,
           data: chunk
@@ -42,7 +57,7 @@ export function setupIPC(mainWindow: BrowserWindow) {
       }
     } catch (error) {
       if (error instanceof Error && error.name === 'AbortError') {
-        console.log('聊天已中止')
+        console.log(`对话 ${messageId} 已中止`)
         return
       }
       console.error('聊天错误:', error)
@@ -56,7 +71,7 @@ export function setupIPC(mainWindow: BrowserWindow) {
       }
       mainWindow.webContents.send('update-message', errorContent)
     } finally {
-      currentAbortController = null
+      abortControllers.delete(messageId)
     }
   })
 
