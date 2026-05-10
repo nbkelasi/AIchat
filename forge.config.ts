@@ -82,11 +82,11 @@ const config: ForgeConfig = {
       version: FuseVersion.V1,
       // 禁用 RunAsNode：防止攻击者通过环境变量将应用作为 Node.js 解释器运行
       [FuseV1Options.RunAsNode]: false,
-      // 启用 Cookie 加密：防止攻击者通过环境变量修改 Node.js 行为
+      // 启用 Cookie 加密：对本地 Cookie 数据进行加密存储，防止敏感信息泄露
       [FuseV1Options.EnableCookieEncryption]: true,
-      // 禁用 Node.js 选项环境变量：防止攻击者通过环境变量修改 Node.js 行为
+      // 禁用 Node.js 选项环境变量：防止通过 NODE_OPTIONS 环境变量注入恶意参数
       [FuseV1Options.EnableNodeOptionsEnvironmentVariable]: false,
-      // 禁用 Node.js CLI inspect 参数：防止攻击者通过环境变量修改 Node.js 行为
+      // 禁用 Node.js CLI inspect 参数：防止通过调试参数远程附加调试器
       [FuseV1Options.EnableNodeCliInspectArguments]: false,
       // 启用 ASAR 完整性校验：防止 ASAR 压缩包被篡改
       [FuseV1Options.EnableEmbeddedAsarIntegrityValidation]: true,

@@ -59,8 +59,11 @@ jobs:
   # Linux 构建任务（生成 .deb / .rpm）
   # =============================
   build-linux:
-    name: 构建 Linux
+    name: 构建 Linux (${{ matrix.arch }})
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: [x64, arm64]
     steps:
       - name: 拉取代码
         uses: actions/checkout@v4
@@ -88,7 +91,7 @@ jobs:
       - name: 安装依赖
         run: npm ci
 
-      - name: 构建并发布（Linux）
+      - name: 构建并发布（Linux ${{ matrix.arch }}）
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run publish -- --platform=linux
+        run: npm run publish -- --platform=linux --arch=${{ matrix.arch }}
